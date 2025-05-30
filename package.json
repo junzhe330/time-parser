@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "chrono-node": "^2.7.2"
+    "chrono-node": "2.6.2"
   }
 }
