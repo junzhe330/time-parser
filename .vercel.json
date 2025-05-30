@@ -1,8 +1,0 @@
-{
-  "functions": {
-    "api/parse-time.js": {
-      "memory": 128,
-      "maxDuration": 10
-    }
-  }
-}
