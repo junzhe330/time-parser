@@ -18,7 +18,7 @@ module.exports = function handler(req, res) {
       return res.status(422).json({ error: 'Could not parse time from input' });
     }
 
-    const formatted = parsed.toTimeString().slice(0, 5);
+    const formatted = parsed.toTimeString().slice(0, 5); // HH:mm format
     return res.status(200).json({ time_24h: formatted });
   } catch (err) {
     console.error('🔥 Error in parse-time:', err);
