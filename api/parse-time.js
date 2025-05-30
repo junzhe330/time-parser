@@ -1,25 +1,22 @@
-import chrono from 'chrono-node';
+import { parseDate } from 'chrono-node';
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST requests are allowed' });
   }
 
-  const { time_description } = req.body;
+  const { text } = req.body;
 
-  if (!time_description) {
-    return res.status(400).json({ error: 'Missing time_description' });
+  if (!text) {
+    return res.status(400).json({ error: 'Missing text in request body' });
   }
 
-  const now = new Date();
-  const parsedResult = chrono.parse(time_description, now)[0];
+  const parsed = parseDate(text);
 
-  if (!parsedResult || !parsedResult.start) {
-    return res.status(400).json({ error: 'Unable to parse time' });
+  if (!parsed) {
+    return res.status(422).json({ error: 'Could not parse time' });
   }
 
-  const dateObj = parsedResult.start.date();
-  const formattedTime = dateObj.toTimeString().slice(0, 5); // HH:mm
-
-  return res.status(200).json({ time_24h: formattedTime });
+  const formatted = parsed.toTimeString().slice(0, 5); // HH:mm
+  res.status(200).json({ time_24h: formatted });
 }
