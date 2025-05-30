@@ -1,28 +1,33 @@
 import { parseDate } from 'chrono-node';
 
 export default function handler(req, res) {
-  // CORS headers (important for Voiceflow)
+  // CORS headers (important for Voiceflow and testing)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Only POST allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Only POST allowed' });
+  }
 
   try {
     const { text } = req.body;
-    if (!text) return res.status(400).json({ error: 'Missing "text" in request body' });
+    if (!text) {
+      return res.status(400).json({ error: 'Missing "text" in request body' });
+    }
 
     const parsedResult = parseDate(text, new Date(), { forwardDate: true });
-    const parsed = parsedResult?.start?.date?.();
 
-    if (!parsed) return res.status(422).json({ error: 'Unable to parse time' });
+    if (!parsedResult || isNaN(parsedResult)) {
+      return res.status(422).json({ error: 'Unable to parse time' });
+    }
 
-    const hours = parsed.getHours().toString().padStart(2, '0');
-    const minutes = parsed.getMinutes().toString().padStart(2, '0');
+    const hours = parsedResult.getHours().toString().padStart(2, '0');
+    const minutes = parsedResult.getMinutes().toString().padStart(2, '0');
 
     return res.status(200).json({
-      time: `${hours}:${minutes}`
+      time: `${hours}:${minutes}`,
     });
 
   } catch (error) {
