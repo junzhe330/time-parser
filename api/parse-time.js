@@ -1,7 +1,7 @@
 import { parseDate } from 'chrono-node';
 
 export default function handler(req, res) {
-  // CORS headers (needed for Voiceflow)
+  // CORS headers (for Voiceflow compatibility)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -10,11 +10,9 @@ export default function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Only POST allowed' });
 
   const { text } = req.body;
-
   if (!text) return res.status(400).json({ error: 'Missing "text" in request body' });
 
   const parsed = parseDate(text, new Date(), { forwardDate: true });
-
   if (!parsed) return res.status(422).json({ error: 'Unable to parse time' });
 
   const hours = parsed.getHours().toString().padStart(2, '0');
@@ -24,3 +22,4 @@ export default function handler(req, res) {
     time: `${hours}:${minutes}`
   });
 }
+
