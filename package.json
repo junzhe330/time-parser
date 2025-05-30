@@ -1,8 +1,9 @@
 {
-  "name": "time-parser",
+  "name": "parse-time-api",
   "version": "1.0.0",
+  "main": "index.js",
   "type": "module",
   "dependencies": {
-    "chrono-node": "^2.6.2"
+    "chrono-node": "^2.7.2"
   }
 }
